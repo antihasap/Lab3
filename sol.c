@@ -9,9 +9,25 @@ int main(int argc, char **argv)
     }
     int n, m;
     fscanf(file, "%d %d", &n, &m);
+    if (n <= 0 || m <= 0) {
+        fclose(file);
+        return 1;
+    }
     int **matrix = (int**)malloc(n * sizeof(int*));
+    if (matrix == NULL) {
+        fclose(file);
+        return 1;
+    }
     for (int i = 0; i < n; i++) {
         matrix[i] = (int*)malloc(m * sizeof(int));
+        if (matrix[i] == NULL) {
+            for (int j = 0; j < i; j++) {
+                free(matrix[j]);
+            }
+            free(matrix);
+            fclose(file);
+            return 1;
+        }
     }
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
@@ -31,13 +47,13 @@ int main(int argc, char **argv)
     }
     int ans2 = 100000000, pos = 0;
     for (int i = 0; i < n; i++) {
-        if (matrix[i][2-1] < ans2) {
-            ans2 = matrix[i][2-1];
+        if (matrix[i][1] < ans2) {
+            ans2 = matrix[i][1];
             pos = i;
         }
     }
-    matrix[pos][2-1] = matrix[3-1][4-1];
-    matrix[3-1][4-1] = ans2;
+    matrix[pos][1] = matrix[2][3];
+    matrix[2][3] = ans2;
     printf("%d", ans1);
     printf("%d \n", ans2);
     for (int i = 0; i < n; i++) {
